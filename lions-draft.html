@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detroit Lions — Draft History Since 2000</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lions-blue: #0076B6;
+    --lions-silver: #B0B7BC;
+    --lions-light: #5BB8F5;
+    --black: #000000;
+    --dark: #0a0a0a;
+    --surface: #111111;
+    --border: #1a1a1a;
+    --text: #c8cdd1;
+    --text-dim: #555;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* Header */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--lions-blue);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+
+  .header-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.12em;
+    color: #fff;
+  }
+  .header-logo span { color: var(--lions-blue); }
+
+  .header-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 5rem 2rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--lions-blue);
+    margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 10vw, 9rem);
+    line-height: 0.9;
+    color: #fff;
+    letter-spacing: 0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title .accent { color: var(--lions-blue); }
+
+  .hero-rule {
+    width: 4rem;
+    height: 2px;
+    background: var(--lions-blue);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-sub {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* GM sections */
+  .gm-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .gm-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .gm-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.08em;
+    color: #fff;
+  }
+
+  .gm-years {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Draft year card */
+  .draft-year {
+    margin-bottom: 2.5rem;
+  }
+
+  .year-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    color: var(--lions-light);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .year-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .picks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .pick {
+    display: grid;
+    grid-template-columns: 3.5rem 2rem 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 2px solid transparent;
+    transition: border-color 0.15s, background 0.15s;
+    cursor: default;
+  }
+
+  .pick:hover {
+    background: #161616;
+    border-left-color: var(--lions-blue);
+  }
+
+  .pick-rd {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .pick-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--lions-blue);
+    text-align: right;
+  }
+
+  .pick-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .pick-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #e8ecef;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pick-detail {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pos-badge {
+    display: inline-block;
+    font-size: 0.55rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    padding: 0 4px;
+    background: rgba(0,118,182,0.12);
+    color: var(--lions-light);
+    border: 1px solid rgba(0,118,182,0.25);
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  /* Note tags */
+  .note {
+    font-size: 0.55rem;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #666;
+    margin-top: 1px;
+    font-style: italic;
+  }
+
+  /* Dividers */
+  .section-divider {
+    max-width: 1100px;
+    margin: 0 auto 3rem;
+    padding: 0 2rem;
+  }
+
+  .section-divider hr {
+    border: none;
+    border-top: 1px solid #1e1e1e;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  footer span { color: var(--lions-blue); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-logo">Detroit <span>Lions</span></div>
+  <div class="header-meta">Draft History · 2000–2026</div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">Detroit Lions · NFL Draft Archive</div>
+  <h1 class="hero-title">DRAFT<br><span class="accent">HISTORY</span></h1>
+  <div class="hero-rule"></div>
+  <div class="hero-sub">Every pick · 2000 to 2026 · All general managers</div>
+</div>
+
+<!-- ═══════════════════════════════════════ BRAD HOLMES ══ -->
+<div class="gm-section">
+  <div class="gm-header">
+    <div class="gm-name">Brad Holmes</div>
+    <div class="gm-years">GM · 2021–Present</div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2026</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#17</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">T</span>Blake Miller</div><div class="pick-detail">Clemson</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2025</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#28</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Tyleik Williams</div><div class="pick-detail">Ohio State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#57</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">G</span>Tate Ratledge</div><div class="pick-detail">Georgia</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#70</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Isaac TeSlaa</div><div class="pick-detail">Arkansas</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#171</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OL</span>Miles Frazier</div><div class="pick-detail">LSU</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#196</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Ahmed Hassanein</div><div class="pick-detail">Boise State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#230</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">S</span>Dan Jackson</div><div class="pick-detail">Georgia</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#244</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Dominic Lovett</div><div class="pick-detail">Georgia</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2024</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#29</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Terrion Arnold</div><div class="pick-detail">Alabama</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#61</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Ennis Rakestraw</div><div class="pick-detail">Missouri</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#126</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Giovanni Manu</div><div class="pick-detail">UBC</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#132</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Sione Vaki</div><div class="pick-detail">Utah</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#189</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Mekhi Wingo</div><div class="pick-detail">LSU</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#210</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OG</span>Christian Mahogany</div><div class="pick-detail">Boston College</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2023</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#12</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Jahmyr Gibbs</div><div class="pick-detail">Alabama</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#18</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Jack Campbell</div><div class="pick-detail">Iowa</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#34</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">TE</span>Sam LaPorta</div><div class="pick-detail">Iowa</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#45</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">S</span>Brian Branch</div><div class="pick-detail">Alabama</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#68</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">QB</span>Hendon Hooker</div><div class="pick-detail">Tennessee<div class="note">Released 2025</div></div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#96</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Brodric Martin</div><div class="pick-detail">Western Kentucky<div class="note">Released 2025</div></div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#152</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Colby Sorsdal</div><div class="pick-detail">William &amp; Mary</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#219</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Antoine Green</div><div class="pick-detail">North Carolina</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2022</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#2</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Aidan Hutchinson</div><div class="pick-detail">Michigan</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#12</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Jameson Williams</div><div class="pick-detail">Alabama</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#46</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Josh Paschal</div><div class="pick-detail">Purdue</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#97</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">S</span>Kerby Joseph</div><div class="pick-detail">Illinois<div class="note">Extended pre-2025</div></div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#177</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">TE</span>James Mitchell</div><div class="pick-detail">Virginia Tech</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#188</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Malcolm Rodriguez</div><div class="pick-detail">Oklahoma State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#217</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">EDGE</span>James Houston</div><div class="pick-detail">Jackson State<div class="note">Released 2024</div></div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#237</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Chase Lucas</div><div class="pick-detail">Arizona State</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2021</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#7</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Penei Sewell</div><div class="pick-detail">Oregon<div class="note">Extended pre-2024</div></div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#41</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Levi Onwuzurike</div><div class="pick-detail">Washington<div class="note">Re-signed 2025</div></div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#72</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Alim McNeill</div><div class="pick-detail">NC State<div class="note">Extended 2024</div></div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#101</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Ifeatu Melifonwu</div><div class="pick-detail">Syracuse<div class="note">Lost to FA 2025</div></div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#112</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Amon-Ra St. Brown</div><div class="pick-detail">USC<div class="note">Extended pre-2024</div></div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#113</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Derrick Barnes</div><div class="pick-detail">Purdue<div class="note">Re-signed 2025</div></div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#257</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Jermar Jefferson</div><div class="pick-detail">Oregon State</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"><hr></div>
+
+<!-- ═══════════════════════════════════════ BOB QUINN ══ -->
+<div class="gm-section">
+  <div class="gm-header">
+    <div class="gm-name">Bob Quinn</div>
+    <div class="gm-years">GM · 2016–2020</div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2020</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#3</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Jeff Okudah</div><div class="pick-detail">Ohio State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#35</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>D'Andre Swift</div><div class="pick-detail">Georgia</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#67</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Julian Okwara</div><div class="pick-detail">Notre Dame</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#75</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OL</span>Jonah Jackson</div><div class="pick-detail">Ohio State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#121</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OL</span>Logan Stenberg</div><div class="pick-detail">Kentucky</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#166</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Quintez Cephus</div><div class="pick-detail">Wisconsin</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#172</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Jason Huntley</div><div class="pick-detail">New Mexico State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#197</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DL</span>John Penisini</div><div class="pick-detail">Utah</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#235</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Jason Cornell</div><div class="pick-detail">Ohio State</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2019</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#8</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">TE</span>T.J. Hockenson</div><div class="pick-detail">Iowa</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#43</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Jahlani Tavai</div><div class="pick-detail">Hawaii</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#81</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">S</span>Will Harris</div><div class="pick-detail">Boston College</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#117</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Austin Bryant</div><div class="pick-detail">Clemson</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#146</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Amani Oruwariye</div><div class="pick-detail">Penn State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#184</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Travis Fulgham</div><div class="pick-detail">Old Dominion</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#186</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Ty Johnson</div><div class="pick-detail">Maryland</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#224</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Isaac Nauta</div><div class="pick-detail">Georgia</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#229</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>PJ Johnson</div><div class="pick-detail">Arizona</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2018</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#20</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">C</span>Frank Ragnow</div><div class="pick-detail">Arkansas</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#43</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Kerryon Johnson</div><div class="pick-detail">Auburn</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#82</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">S</span>Tracy Walker</div><div class="pick-detail">Louisiana-Lafayette</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#114</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Da'shawn Hand</div><div class="pick-detail">Alabama</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#153</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">G</span>Tyrell Crosby</div><div class="pick-detail">Oregon</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#237</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Nick Bawden</div><div class="pick-detail">San Diego State</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2017</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#21</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Jarrad Davis</div><div class="pick-detail">Florida</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#53</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Teez Tabor</div><div class="pick-detail">Florida</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#96</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Kenny Golladay</div><div class="pick-detail">Northern Illinois</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#124</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Jalen Reeves-Maybin</div><div class="pick-detail">Tennessee</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#127</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">TE</span>Michael Roberts</div><div class="pick-detail">Toledo</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#165</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Jamal Agnew</div><div class="pick-detail">San Diego</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#205</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Jeremiah Ledbetter</div><div class="pick-detail">Arkansas</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#215</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">QB</span>Brad Kaaya</div><div class="pick-detail">Miami</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#250</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Pat O'Connor</div><div class="pick-detail">Eastern Michigan</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2016</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#16</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Taylor Decker</div><div class="pick-detail">Ohio State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#46</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>A'Shawn Robinson</div><div class="pick-detail">Alabama</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#95</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">C</span>Graham Glasgow</div><div class="pick-detail">Michigan</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#111</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">S</span>Miles Killebrew</div><div class="pick-detail">Southern Utah</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#151</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Joe Dahl</div><div class="pick-detail">Washington State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#169</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OLB</span>Antwione Williams</div><div class="pick-detail">Georgia Southern</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#191</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">QB</span>Jake Rudock</div><div class="pick-detail">Michigan</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#202</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Anthony Zettel</div><div class="pick-detail">Penn State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#210</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LS</span>Jimmy Landes</div><div class="pick-detail">Baylor</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#236</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Dwayne Washington</div><div class="pick-detail">Washington</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"><hr></div>
+
+<!-- ═══════════════════════════════════════ MARTIN MAYHEW ══ -->
+<div class="gm-section">
+  <div class="gm-header">
+    <div class="gm-name">Martin Mayhew</div>
+    <div class="gm-years">GM · 2008–2015</div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2015</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#28</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">G</span>Laken Tomlinson</div><div class="pick-detail">Duke</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#54</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Ameer Abdullah</div><div class="pick-detail">Nebraska</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#80</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Alex Carter</div><div class="pick-detail">Stanford</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#113</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Gabe Wright</div><div class="pick-detail">Auburn</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#168</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">FB</span>Michael Burton</div><div class="pick-detail">Rutgers</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#200</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Quandre Diggs</div><div class="pick-detail">Texas</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#240</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Corey Robinson</div><div class="pick-detail">South Carolina</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2014</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#10</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">TE</span>Eric Ebron</div><div class="pick-detail">North Carolina</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#40</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Kyle Van Noy</div><div class="pick-detail">BYU</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#76</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">C</span>Travis Swanson</div><div class="pick-detail">Arkansas</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#133</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Nevin Lawson</div><div class="pick-detail">Utah State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#136</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Larry Webster</div><div class="pick-detail">Bloomsburg</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#158</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Caraun Reid</div><div class="pick-detail">Princeton</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#189</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>T.J. Jones</div><div class="pick-detail">Notre Dame</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#229</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">K</span>Nate Freese</div><div class="pick-detail">—</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2013</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#5</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Ezekiel Ansah</div><div class="pick-detail">BYU</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#36</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Darius Slay</div><div class="pick-detail">Mississippi State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#65</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">G</span>Larry Warford</div><div class="pick-detail">Kentucky</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#132</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Devin Taylor</div><div class="pick-detail">South Carolina</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#165</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">P</span>Sam Martin</div><div class="pick-detail">Appalachian State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#171</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Corey Fuller</div><div class="pick-detail">Virginia Tech</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#199</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Theo Riddick</div><div class="pick-detail">Notre Dame</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#211</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">TE</span>Michael Williams</div><div class="pick-detail">Alabama</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#245</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Brandon Hepburn</div><div class="pick-detail">Florida A&amp;M</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2012</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#23</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Riley Reiff</div><div class="pick-detail">Iowa</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#54</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Ryan Broyles</div><div class="pick-detail">Oklahoma</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#85</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Bill Bentley</div><div class="pick-detail">Louisiana-Lafayette</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#125</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Ronnell Lewis</div><div class="pick-detail">Oklahoma</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#138</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Tahir Whitehead</div><div class="pick-detail">Temple</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#148</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Chris Greenwood</div><div class="pick-detail">Albion</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">#196</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Jonte Green</div><div class="pick-detail">New Mexico State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#223</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Travis Lewis</div><div class="pick-detail">Oklahoma</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2011</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#13</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Nick Fairley</div><div class="pick-detail">Auburn</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#44</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Titus Young</div><div class="pick-detail">Boise State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#57</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Mikel Leshoure</div><div class="pick-detail">Illinois</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">#157</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Doug Hogue</div><div class="pick-detail">Boston College</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#209</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OL</span>Johnny Culbreath</div><div class="pick-detail">—</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2010</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#2</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Ndamukong Suh</div><div class="pick-detail">Nebraska</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#31</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Jahvid Best</div><div class="pick-detail">California</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">#66</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Amari Spievey</div><div class="pick-detail">Iowa</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">#128</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Jason Fox</div><div class="pick-detail">Miami</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#213</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Willie Young</div><div class="pick-detail">NC State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">#255</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Tim Toone</div><div class="pick-detail">Weber State</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2009</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#1</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">QB</span>Matthew Stafford</div><div class="pick-detail">Georgia</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">#20</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">TE</span>Brandon Pettigrew</div><div class="pick-detail">Oklahoma State</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">#33</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">S</span>Louis Delmas</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>DeAndre Levy</div><div class="pick-detail">Wisconsin</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Derrick Williams</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Sammie Lee Hill</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Aaron Brown</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Lydon Murtha</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Zack Follett</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">TE</span>Dan Gronkowski</div><div class="pick-detail">—</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"><hr></div>
+
+<!-- ═══════════════════════════════════════ MATT MILLEN ══ -->
+<div class="gm-section">
+  <div class="gm-header">
+    <div class="gm-name">Matt Millen</div>
+    <div class="gm-years">GM · 2001–2008</div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2008</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Gosder Cherilus</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Jordon Dizon</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Kevin Smith</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Andre Fluellen</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Cliff Avril</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Kenneth Moore</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">FB</span>Jerome Felton</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Landon Cohen</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">S</span>Caleb Campbell</div><div class="pick-detail">—</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2007</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Calvin Johnson</div><div class="pick-detail">Georgia Tech</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">QB</span>Drew Stanton</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Ikaika Alama-Francis</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">FS</span>Gerald Alexander</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>AJ Davis</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">G</span>Manny Ramirez</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Johnny Baldwin</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Ramzee Robinson</div><div class="pick-detail">—</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2006</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Ernie Sims</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">SS</span>Daniel Bullocks</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Brian Calhoun</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Jonathan Scott</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Dee McCann</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">G</span>Fred Matua</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Anthony Cannon</div><div class="pick-detail">—</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2005</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Mike Williams</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Shaun Cody</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Stanley Wilson</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">QB</span>Dan Orlovsky</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Bill Swancutt</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Johnathan Goddard</div><div class="pick-detail">—</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2004</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Roy Williams</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Kevin Jones</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Teddy Lehman</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Keith Smith</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Alex Lewis</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Kelly Butler</div><div class="pick-detail">—</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2003</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Charles Rogers</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Boss Bailey</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Cory Redding</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Artose Pinner</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">S</span>Terrence Holt</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>James Davis</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>David Kircus</div><div class="pick-detail">—</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2002</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">QB</span>Joey Harrington</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Kalimba Edwards</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Andre Goodman</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 4</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>John Taylor</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">TE</span>John Owens</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">CB</span>Chris Cash</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Luke Staley</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 7</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">G</span>Victor Rogers</div><div class="pick-detail">—</div></div></div>
+    </div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2001</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Jeff Backus</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">C</span>Dominic Raiola</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DT</span>Shaun Rogers</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">WR</span>Scotty Anderson</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">QB</span>Mike McMahon</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Jason Glenn</div><div class="pick-detail">—</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"><hr></div>
+
+<!-- ═══════════════════════════════════════ CHUCK SCHMIDT ══ -->
+<div class="gm-section">
+  <div class="gm-header">
+    <div class="gm-name">Chuck Schmidt</div>
+    <div class="gm-years">GM · 1995–2001</div>
+  </div>
+
+  <div class="draft-year">
+    <div class="year-label">2000</div>
+    <div class="picks-grid">
+      <div class="pick"><div class="pick-rd">Rd 1</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">OT</span>Stockar McDougle</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 2</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">LB</span>Barret Green</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 3</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">RB</span>Ruben Droughns</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 5</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">S</span>Todd Franz</div><div class="pick-detail">—</div></div></div>
+      <div class="pick"><div class="pick-rd">Rd 6</div><div class="pick-num">—</div><div class="pick-info"><div class="pick-name"><span class="pos-badge">DE</span>Quinton Reese</div><div class="pick-detail">—</div></div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div>Detroit <span>Lions</span> · Draft History 2000–2026 · All Rights Reserved</div>
+</footer>
+
+</body>
+</html>
