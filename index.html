@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Detroit Lions — Draft History Since 2000</title>
+<title>Detroit Lions — Team Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -292,21 +292,487 @@
   }
 
   footer span { color: var(--lions-blue); }
+
+  /* ── TAB NAV ── */
+  .tab-nav {
+    display: flex;
+    gap: 0;
+    max-width: 1100px;
+    margin: 0 auto 0;
+    padding: 0 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.85rem 1.5rem 0.75rem;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    margin-bottom: -1px;
+  }
+
+  .tab-btn:hover { color: var(--lions-light); }
+
+  .tab-btn.active {
+    color: #fff;
+    border-bottom-color: var(--lions-blue);
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── DEPTH CHART ── */
+  .depth-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .depth-group {
+    margin-bottom: 3rem;
+  }
+
+  .depth-group-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.08em;
+    color: #fff;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+  }
+
+  .depth-position {
+    margin-bottom: 1.5rem;
+  }
+
+  .depth-pos-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    color: var(--lions-light);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .depth-pos-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .depth-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .depth-row {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 2px solid transparent;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .depth-row:hover {
+    background: #161616;
+    border-left-color: var(--lions-blue);
+  }
+
+  .depth-row.starter { border-left-color: var(--lions-blue); }
+  .depth-row.reserve { border-left-color: #2a2a2a; }
+  .depth-row.bubble  { border-left-color: #1a1a1a; opacity: 0.7; }
+
+  .depth-slot {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .depth-slot.s-starter { color: var(--lions-light); }
+  .depth-slot.s-reserve { color: var(--text-dim); }
+  .depth-slot.s-bubble  { color: #3a3a3a; }
+
+  .depth-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #e8ecef;
+  }
+
+  .depth-row.reserve .depth-name { color: var(--text); }
+  .depth-row.bubble  .depth-name { color: var(--text-dim); }
+
+  .depth-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    padding: 2px 6px;
+    border: 1px solid rgba(0,118,182,0.3);
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── CONTRACTS ── */
+  .contracts-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .contract-category {
+    margin-bottom: 3rem;
+  }
+
+  .contract-cat-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.08em;
+    color: #fff;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+  }
+
+  .contract-year-group {
+    margin-bottom: 1.75rem;
+  }
+
+  .contract-year-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    color: var(--lions-light);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .contract-year-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .contract-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 0.4rem;
+  }
+
+  .contract-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--lions-blue);
+    transition: background 0.15s;
+  }
+
+  .contract-card:hover { background: #161616; }
+
+  .contract-player {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #e8ecef;
+  }
+
+  .contract-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .contract-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    padding: 2px 5px;
+    border: 1px solid rgba(91,184,245,0.25);
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .contract-note.option {
+    border-color: rgba(0,118,182,0.55);
+    color: var(--lions-light);
+  }
 </style>
 </head>
 <body>
 
 <header>
   <div class="header-logo">Detroit <span>Lions</span></div>
-  <div class="header-meta">Draft History · 2000–2026</div>
+  <div class="header-meta">Detroit Lions · Team Hub</div>
 </header>
 
 <div class="hero">
-  <div class="hero-eyebrow">Detroit Lions · NFL Draft Archive</div>
-  <h1 class="hero-title">DRAFT<br><span class="accent">HISTORY</span></h1>
+  <div class="hero-eyebrow">Detroit Lions · Team Hub</div>
+  <h1 class="hero-title">LIONS<br><span class="accent">HQ</span></h1>
   <div class="hero-rule"></div>
-  <div class="hero-sub">Every pick · 2000 to 2026 · All general managers</div>
+  <div class="hero-sub">Depth Chart · Contracts · Draft History · 2000–2026</div>
 </div>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('draft')">Draft History</button>
+  <button class="tab-btn" onclick="switchTab('contracts')">Contracts</button>
+  <button class="tab-btn" onclick="switchTab('depth')">Depth Chart</button>
+</nav>
+
+<!-- ══════════════════════ DEPTH CHART TAB ══════════════════════ -->
+<div id="tab-depth" class="tab-panel">
+<div class="depth-section">
+  <div style="padding: 2rem 0 1rem;">
+    <div class="hero-eyebrow">2025 Season Roster</div>
+  </div>
+
+  <!-- OFFENSE -->
+  <div class="depth-group">
+    <div class="depth-group-header">Offense</div>
+
+    <div class="depth-position">
+      <div class="depth-pos-label">QB</div>
+      <div class="depth-rows">
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">#16 Goff, Jared</div><div class="depth-tag">T/LAR</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">Bridgewater, Teddy</div><div class="depth-tag">U/TB</div></div>
+      </div>
+    </div>
+
+    <div class="depth-position">
+      <div class="depth-pos-label">RB</div>
+      <div class="depth-rows">
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">#0 Gibbs, Jahmyr</div><div class="depth-tag">23/1</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">Isiah Pacheco</div><div class="depth-tag">SF25</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#25 Saylors, Jacob</div><div class="depth-tag">SF25</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#33 Vaki, Sione</div><div class="depth-tag">24/4</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#26 Small, Jabari</div><div class="depth-tag">SF25</div></div>
+        <div class="depth-row bubble"><div class="depth-slot s-bubble">Bubble</div><div class="depth-name">Robichaux, Kye</div><div class="depth-tag">CF25</div></div>
+      </div>
+    </div>
+
+    <div class="depth-position">
+      <div class="depth-pos-label">WR</div>
+      <div class="depth-rows">
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter · WR</div><div class="depth-name">#14 St. Brown, Amon-Ra</div><div class="depth-tag">25/3</div></div>
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter · WR</div><div class="depth-name">#1 Williams, Jameson</div><div class="depth-tag">22/1</div></div>
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter · WR</div><div class="depth-name">18 TeSlaa, Isaac</div><div class="depth-tag">21/4</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#83 Meeks, Jackson</div><div class="depth-tag">CF25</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#85 Kennedy, Tom</div><div class="depth-tag">CF19</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#19 Lovett, Dominic</div><div class="depth-tag">25/7</div></div>
+        <div class="depth-row bubble"><div class="depth-slot s-bubble">Bubble</div><div class="depth-name">#80 Cunningham, Malik</div><div class="depth-tag">SF25</div></div>
+      </div>
+    </div>
+
+    <div class="depth-position">
+      <div class="depth-pos-label">OL</div>
+      <div class="depth-rows">
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter · OT</div><div class="depth-name">#58 Sewell, Penei</div><div class="depth-tag">21/1</div></div>
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter · OG</div><div class="depth-name">#73 Mahogany, Christian</div><div class="depth-tag">24/6</div></div>
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter · C</div><div class="depth-name">Mays, Cade</div><div class="depth-tag">T/Hou</div></div>
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter · OG</div><div class="depth-name">#69 Ratledge, Tate</div><div class="depth-tag">25/2</div></div>
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter · OT</div><div class="depth-name">Miller, Blake</div><div class="depth-tag">26/1</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#59 Manu, Giovanni</div><div class="depth-tag">24/4</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#71 Frazier, Miles</div><div class="depth-tag">25/5</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#75 Sorsdal, Colby</div><div class="depth-tag">23/5</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#79 Borom, Larry</div><div class="depth-tag">U/Mia</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#70 Scruggs, Juice</div><div class="depth-tag">SF23</div></div>
+        <div class="depth-row bubble"><div class="depth-slot s-bubble">Bubble</div><div class="depth-name">#63 Miller, Mason</div><div class="depth-tag">CF25</div></div>
+        <div class="depth-row bubble"><div class="depth-slot s-bubble">Bubble</div><div class="depth-name">#77 Cochran, Devin</div><div class="depth-tag">SF25</div></div>
+        <div class="depth-row bubble"><div class="depth-slot s-bubble">Bubble</div><div class="depth-name">#65 McLaughlin, Seth</div><div class="depth-tag">SF26</div></div>
+      </div>
+    </div>
+
+    <div class="depth-position">
+      <div class="depth-pos-label">TE</div>
+      <div class="depth-rows">
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">#87 LaPorta, Sam</div><div class="depth-tag">23/2</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#89 Wright, Brock</div><div class="depth-tag">CF21</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">#40 Horton, Zach</div><div class="depth-tag">CF25</div></div>
+        <div class="depth-row bubble"><div class="depth-slot s-bubble">Bubble</div><div class="depth-name">#82 Gordon, Thomas</div><div class="depth-tag">SF26</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DEFENSE -->
+  <div class="depth-group">
+    <div class="depth-group-header">Defense</div>
+
+    <div class="depth-position">
+      <div class="depth-pos-label">Defensive Line / Edge</div>
+      <div class="depth-rows">
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Aidan Hutchinson</div><div class="depth-tag">Edge</div></div>
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Derrick Moore</div><div class="depth-tag">Edge</div></div>
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Alim McNeill</div><div class="depth-tag">DT</div></div>
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Levi Onwuzurike</div><div class="depth-tag">DT</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">Mekhi Wingo</div><div class="depth-tag"></div></div>
+        <div class="depth-row bubble"><div class="depth-slot s-bubble">Bubble</div><div class="depth-name">Ahmed Hassanein</div><div class="depth-tag">Rookie</div></div>
+      </div>
+    </div>
+
+    <div class="depth-position">
+      <div class="depth-pos-label">Linebacker</div>
+      <div class="depth-rows">
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Jack Campbell</div><div class="depth-tag"></div></div>
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Derrick Barnes</div><div class="depth-tag">Re-signed '25</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">Malcolm Rodriguez</div><div class="depth-tag"></div></div>
+      </div>
+    </div>
+
+    <div class="depth-position">
+      <div class="depth-pos-label">Cornerback</div>
+      <div class="depth-rows">
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Terrion Arnold</div><div class="depth-tag">Through 2027</div></div>
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Ennis Rakestraw</div><div class="depth-tag">Through 2027</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">Kindle Vildor</div><div class="depth-tag"></div></div>
+        <div class="depth-row bubble"><div class="depth-slot s-bubble">Bubble</div><div class="depth-name">Chase Lucas</div><div class="depth-tag"></div></div>
+      </div>
+    </div>
+
+    <div class="depth-position">
+      <div class="depth-pos-label">Safety</div>
+      <div class="depth-rows">
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Kerby Joseph</div><div class="depth-tag">Through 2029</div></div>
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Brian Branch</div><div class="depth-tag">Through 2026</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">Ifeatu Melifonwu</div><div class="depth-tag">FA 2025</div></div>
+        <div class="depth-row bubble"><div class="depth-slot s-bubble">Bubble</div><div class="depth-name">Dan Jackson</div><div class="depth-tag">Rookie</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPECIAL TEAMS -->
+  <div class="depth-group">
+    <div class="depth-group-header">Special Teams</div>
+
+    <div class="depth-position">
+      <div class="depth-pos-label">Kicker</div>
+      <div class="depth-rows">
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Michael Badgley</div><div class="depth-tag"></div></div>
+      </div>
+    </div>
+
+    <div class="depth-position">
+      <div class="depth-pos-label">Punter</div>
+      <div class="depth-rows">
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Jack Fox</div><div class="depth-tag"></div></div>
+      </div>
+    </div>
+
+    <div class="depth-position">
+      <div class="depth-pos-label">Return Specialist</div>
+      <div class="depth-rows">
+        <div class="depth-row starter"><div class="depth-slot s-starter">Starter</div><div class="depth-name">Jameson Williams</div><div class="depth-tag">KR</div></div>
+        <div class="depth-row reserve"><div class="depth-slot s-reserve">Reserve</div><div class="depth-name">Sione Vaki</div><div class="depth-tag">PR</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════ CONTRACTS TAB ══════════════════════ -->
+<div id="tab-contracts" class="tab-panel">
+<div class="contracts-section">
+  <div style="padding: 2rem 0 1rem;">
+    <div class="hero-eyebrow">Active Roster Contracts</div>
+  </div>
+
+  <!-- FREE AGENTS / SECOND CONTRACTS -->
+  <div class="contract-category">
+    <div class="contract-cat-header">Free Agents / Second Contracts</div>
+
+    <div class="contract-year-group">
+      <div class="contract-year-label">Through 2030</div>
+      <div class="contract-grid">
+        <div class="contract-card"><div class="contract-player">Aidan Hutchinson</div><div class="contract-tags"><span class="contract-note">DE</span></div></div>
+      </div>
+    </div>
+
+    <div class="contract-year-group">
+      <div class="contract-year-label">Through 2029</div>
+      <div class="contract-grid">
+        <div class="contract-card"><div class="contract-player">Penei Sewell</div><div class="contract-tags"><span class="contract-note">OT</span></div></div>
+        <div class="contract-card"><div class="contract-player">Kerby Joseph</div><div class="contract-tags"><span class="contract-note">S</span></div></div>
+        <div class="contract-card"><div class="contract-player">Jameson Williams</div><div class="contract-tags"><span class="contract-note">WR</span></div></div>
+      </div>
+    </div>
+
+    <div class="contract-year-group">
+      <div class="contract-year-label">Through 2028</div>
+      <div class="contract-grid">
+        <div class="contract-card"><div class="contract-player">Amon-Ra St. Brown</div><div class="contract-tags"><span class="contract-note">WR</span></div></div>
+        <div class="contract-card"><div class="contract-player">Alim McNeill</div><div class="contract-tags"><span class="contract-note">DT</span></div></div>
+        <div class="contract-card"><div class="contract-player">Jared Goff</div><div class="contract-tags"><span class="contract-note">QB</span></div></div>
+        <div class="contract-card"><div class="contract-player">Cade Mays</div><div class="contract-tags"><span class="contract-note">C</span></div></div>
+      </div>
+    </div>
+
+    <div class="contract-year-group">
+      <div class="contract-year-label">Through 2027</div>
+      <div class="contract-grid">
+        <div class="contract-card"><div class="contract-player">Derrick Barnes</div><div class="contract-tags"><span class="contract-note">LB</span></div></div>
+        <div class="contract-card"><div class="contract-player">D.J. Reed</div><div class="contract-tags"><span class="contract-note">WR</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROOKIE CONTRACTS -->
+  <div class="contract-category">
+    <div class="contract-cat-header">Rookie Contracts</div>
+
+    <div class="contract-year-group">
+      <div class="contract-year-label">Through 2028</div>
+      <div class="contract-grid">
+        <div class="contract-card"><div class="contract-player">Tyleik Williams</div><div class="contract-tags"><span class="contract-note">DT</span><span class="contract-note option">5th Yr Option</span></div></div>
+        <div class="contract-card"><div class="contract-player">Tate Ratledge</div><div class="contract-tags"><span class="contract-note">G</span></div></div>
+      </div>
+    </div>
+
+    <div class="contract-year-group">
+      <div class="contract-year-label">Through 2027</div>
+      <div class="contract-grid">
+        <div class="contract-card"><div class="contract-player">Terrion Arnold</div><div class="contract-tags"><span class="contract-note">CB</span><span class="contract-note option">5th Yr Option</span></div></div>
+        <div class="contract-card"><div class="contract-player">Ennis Rakestraw</div><div class="contract-tags"><span class="contract-note">CB</span></div></div>
+        <div class="contract-card"><div class="contract-player">Christian Mahogany</div><div class="contract-tags"><span class="contract-note">OG</span></div></div>
+      </div>
+    </div>
+
+    <div class="contract-year-group">
+      <div class="contract-year-label">Through 2026</div>
+      <div class="contract-grid">
+        <div class="contract-card"><div class="contract-player">Jahmyr Gibbs</div><div class="contract-tags"><span class="contract-note">RB</span><span class="contract-note option">5th Yr Option</span></div></div>
+        <div class="contract-card"><div class="contract-player">Sam LaPorta</div><div class="contract-tags"><span class="contract-note">TE</span></div></div>
+        <div class="contract-card"><div class="contract-player">Brian Branch</div><div class="contract-tags"><span class="contract-note">S</span></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════ DRAFT HISTORY TAB ══════════════════════ -->
+<div id="tab-draft" class="tab-panel active">
 
 <!-- ═══════════════════════════════════════ BRAD HOLMES ══ -->
 <div class="gm-section">
@@ -719,9 +1185,21 @@
   </div>
 </div>
 
-<footer>
-  <div>Detroit <span>Lions</span> · Draft History 2000–2026 · All Rights Reserved</div>
-</footer>
+</div><!-- end tab-draft -->
 
+<footer>
+  <div>Detroit <span>Lions</span> · Team Hub · Draft History 2000–2026</div>
+</footer>
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    const btns = document.querySelectorAll('.tab-btn');
+    const order = ['draft','contracts','depth'];
+    btns[order.indexOf(name)].classList.add('active');
+    window.scrollTo({ top: document.querySelector('.tab-nav').offsetTop - 56, behavior: 'smooth' });
+  }
+</script>
 </body>
 </html>
